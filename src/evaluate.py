@@ -3,4 +3,19 @@ import pandas as pd
 
 
 def evaluate(csv_path): 
-    df = pd.read_csv(csv_path)
+    df = pd.read_csv(csv_path) 
+    correct = 0
+
+    # Conto tutte le predizioni corrette ciclando su ogni riga del file CSV (ignorando, ovviamente, l'indice di riga) 
+    for _, row in df.iterrows(): 
+        # Per come ho costruito la funzione di predict, essa restituisce un dizionario contenente la previsione con la corrispondente probabilità; 
+        # EX: {'negative': 0.1, 'neutral': 0.2, 'positive': 0.9} 
+        # -> Da questo dict, devo poi logicamente ricavare il valore più alto (che coincide con la previsione) 
+        pred = max(predict_sentiment(row["text"]), key=lambda x: predict_sentiment(row["text"])[x])
+
+        if pred == row["sentiment"]: 
+            correct += 1
+
+    
+    accuracy = correct / len(df)
+    return accuracy
