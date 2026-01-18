@@ -1,0 +1,18 @@
+IN QUESTO FILE RIPORTO LA DOCUMENTAZIONE RELATIVA AD ALCUNE SCELTE CHE HO DECISO DI IMPLEMENTARE NEL PROGETTO.
+
+In particolare, mi voglio soffermare sul Sistema di Monitoraggio che ho deciso di implementare: la traccia del problema mi chiede di implementare un sistema di Monitoraggio
+per valutare continuamente le performance del modello e il sentiment rilevato.
+
+Per fare ciò, mi costruisco (prima ancora del Docker-Compose): 
+- un file .csv in cui salvare le metriche e il sentiment del modello (file presente nella cartella "metrics"); in questo file vado a riportare
+  il timestamp (necessario per visualizzarlo poi in grafana) e il sentiment (text).
+- Una funzione di Monitoraggio "monitor_text", definita sempre in "metrics", in cui esporto poi le metriche nel CSV 
+
+
+
+
+
+------
+
+
+OSS PER IL PROFESSORE: ho dovuto inizializzare un file "pytest.ini" per poter effettuare il test, altrimenti continuava ad uscirmi errore nel terminale.
