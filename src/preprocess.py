@@ -9,5 +9,5 @@ def preprocess(text): # In pratica, viene ripulito il testo rimuovendo link, tag
         new_text.append(t)
 
     # Debug: 
-    print("Funzione correttamente eseguita!")
+    # print("Funzione correttamente eseguita!")
     return " ".join(new_text)
