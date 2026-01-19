@@ -25,10 +25,12 @@ Su Grafana, invece, seguo la prassi usata dal professore durante la lezione, ovv
 - Creo un Data source (di tipo "Infinity", visto che ho un file CSV).
 - Creo poi una nuova dashboard, cambiando ovviamente il tipo di query in CSV e mettendo come URL: file:///var/lib/grafana/data/metrics/sentiment_metrics.csv
 
-ATTENZIONE: ho dovuto sostituire l'environment perché non mi leggeva il file csv dentro Grafana; cercando su internet ho trovato: GF_INSTALL_PLUGINS=grafana-csv-datasource e effettivamente funziona.
+⚠️ NOTA PER IL PROFESSORE IMPORTANTE: ho provato varie combinazioni di Plugin nel docker compose, ma su Grafana non riesco proprio a visualizzare i dati del file csv, e mi viene 
+dato sempre lo stesso errore: 
+error while performing the infinity query. error getting response from url /var/lib/grafana/data/metrics/sentiment_metrics.csv. no response received. 
+Error: Get "https:///var/lib/grafana/data/metrics/sentiment_metrics.csv": http: no Host in request URL.
 
-
-
+Il sistema di monitoraggio scritto comunque funziona correttamente, l'ho anche testato nel terminale (i risultati poi messi nel csv in automatico). 
 
 
 ------
