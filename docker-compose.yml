@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped # Se capita che l'applicazione si ferma, Docker Compose potrebbe far partire un altro container; così gli indico però di farlo SOLO SE fermo io il container
+    ports:
+      - '3000:3000' 
+    environment:
+      - GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
+    volumes:
+      - grafana-storage: ./metrics:/var/lib/grafana/data/metrics
+volumes:
+  grafana-storage: {}
