@@ -31,7 +31,7 @@ Nonostante diversi tentativi e differenti configurazioni dei plugin nel file Doc
 
 L’errore restituito è stato costantemente il seguente:
 "error while performing the infinity query. error getting response from url /var/lib/grafana/data/metrics/sentiment_metrics.csv.
-Error: Get "https:///var/lib/grafana/data/metrics/sentiment_metrics.csv": http: no Host in request URL***"
+Error: Get "https:///var/lib/grafana/data/metrics/sentiment_metrics.csv": http: no Host in request URL"
 
 Il sistema di monitoraggio, tuttavia, funziona correttamente dal punto di vista applicativo: le metriche vengono prodotte dal modello e salvate in modo persistente nel file CSV.
 Il problema riscontrato sembra essere legato alle limitazioni del plugin Infinity nell’accesso a file locali all’interno di un ambiente containerizzato.
