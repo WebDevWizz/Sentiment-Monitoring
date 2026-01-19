@@ -1,7 +1,7 @@
-# Sistema di Monitoraggio
+# Sistema di Monitoraggio
 Il progetto include un sistema di monitoraggio progettato per osservare in modo continuo il comportamento del modello di sentiment analysis, usando il modello pre-addestrato Twitter RoBERTa. Il dataset è stato invece preso da Kaggle, e salvato nel progetto come "Tweets.csv". 
 
-## Raccolta delle Metriche
+## Raccolta delle Metriche
 Prima dell’introduzione di Docker Compose, è stato implementato un sistema di raccolta delle metriche basato su file CSV.
 In particolare, il file sentiment_metrics.csv (presente nella cartella metrics/) viene utilizzato per salvare:
 - un timestamp, necessario per una successiva visualizzazione temporale in Grafana;
@@ -17,7 +17,7 @@ Per quanto riguarda l’infrastruttura di monitoraggio, è stato utilizzato **Do
 Il file ***docker-compose.yml*** prevede un singolo container Grafana e un volume condiviso, in modo da rendere persistente e accessibile il file CSV contenente le metriche di monitoraggio.
 
 
-### Configurazione di Grafana
+### Configurazione di Grafana
 Seguendo la procedura mostrata dal professore durante le lezioni, Grafana è stato configurato nel seguente modo:
 - creazione di un Data Source di tipo “Infinity”, utilizzato per la gestione di file CSV;
 - creazione di una nuova dashboard, impostando il tipo di query su CSV e specificando come URL il percorso:
@@ -26,7 +26,7 @@ Seguendo la procedura mostrata dal professore durante le lezioni, Grafana è sta
 ---
 
 
-## Nota su una Limitazione Tecnica
+## Nota su una Limitazione Tecnica
 Nonostante diversi tentativi e differenti configurazioni dei plugin nel file Docker Compose, Grafana non è riuscito a visualizzare correttamente i dati contenuti nel file CSV tramite il Data Source Infinity.
 
 L’errore restituito è stato costantemente il seguente:
@@ -38,5 +38,5 @@ Il problema riscontrato sembra essere legato alle limitazioni del plugin Infinit
 
 ---
 
-## Nota sui Test
+## Nota sui Test
 Per consentire la corretta esecuzione dei test automatici, è stato necessario inizializzare un file pytest.ini, utilizzato per configurare correttamente il percorso dei moduli Python. In assenza di tale file, l’esecuzione dei test generava errori di import.
