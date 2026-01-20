@@ -1,5 +1,6 @@
 # In questo file, andiamo infine a valutare l'accuratezza come metrica per le predizioni: 
 import pandas as pd
+from src.inference import predict_sentiment
 
 
 def evaluate(csv_path): 
