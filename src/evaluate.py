@@ -12,7 +12,8 @@ def evaluate(csv_path):
         # Per come ho costruito la funzione di predict, essa restituisce un dizionario contenente la previsione con la corrispondente probabilità; 
         # EX: {'negative': 0.1, 'neutral': 0.2, 'positive': 0.9} 
         # -> Da questo dict, devo poi logicamente ricavare il valore più alto (che coincide con la previsione) 
-        pred = max(predict_sentiment(row["text"]), key=lambda x: predict_sentiment(row["text"])[x])
+        scores = predict_sentiment(row["text"])
+        pred = max(scores, key=scores.get)
 
         if pred == row["sentiment"]: 
             correct += 1
