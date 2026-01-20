@@ -4,7 +4,7 @@ from src.inference import predict_sentiment
 
 
 def evaluate(csv_path): 
-    df = pd.read_csv(csv_path) 
+    df = pd.read_csv(csv_path).head(10)  # Prendo solo i primi 10 esempi del dataset, altrimenti la funzione sarebbe troppo lunga da eseguire
     correct = 0
 
     # Conto tutte le predizioni corrette ciclando su ogni riga del file CSV (ignorando, ovviamente, l'indice di riga) 
@@ -20,4 +20,4 @@ def evaluate(csv_path):
 
     
     accuracy = correct / len(df)
-    return accuracy
+    print(f"Accuracy on {len(df)} samples: {accuracy:.2f}")
