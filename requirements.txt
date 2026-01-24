@@ -3,5 +3,4 @@ torch
 scipy
 pandas
 pytest
-fastapi
-uvicorn
+scikit-learn

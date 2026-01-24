@@ -1,11 +1,15 @@
-# In questo file, andiamo infine a valutare l'accuratezza come metrica per le predizioni: 
+# ⚠️ Dopo il feedback del professore, ho deciso di implementare l'evaluate andando a valutare direttamente il classification_report e accuracy_score, in modo da avere accuracy, precision, f1 e recall.
+# OSS: ovviamente, nel file requirements.txt ho adesso inclusso sci-kit learn.
+
 import pandas as pd
+from sklearn.metrics import classification_report, accuracy_score
 from src.inference import predict_sentiment
 
 
 def evaluate(csv_path): 
-    df = pd.read_csv(csv_path).head(10)  # Prendo solo i primi 10 esempi del dataset, altrimenti la funzione sarebbe troppo lunga da eseguire
-    correct = 0
+    df = pd.read_csv(csv_path).head(300)  #⚠️ Dopo il feedback del professore, ho deciso di prendere i primi 300 esempi del dataset, in modo da avere delle delle metriche più precise.
+    y_true = []
+    y_pred = []
 
     # Conto tutte le predizioni corrette ciclando su ogni riga del file CSV (ignorando, ovviamente, l'indice di riga) 
     for _, row in df.iterrows(): 
@@ -15,9 +19,12 @@ def evaluate(csv_path):
         scores = predict_sentiment(row["text"])
         pred = max(scores, key=scores.get)
 
-        if pred == row["sentiment"]: 
-            correct += 1
-
+        y_true.append(row["sentiment"])
+        y_pred.append(pred)
     
-    accuracy = correct / len(df)
-    print(f"Accuracy on {len(df)} samples: {accuracy:.2f}")
+    report = classification_report(y_true, y_pred)
+    acc = accuracy_score(y_true, y_pred)
+
+    print(f"Accuracy: {acc:.2f}")
+    print("\nDetailed Report:")
+    print(report)
