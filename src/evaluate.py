@@ -2,7 +2,7 @@
 # OSS: ovviamente, nel file requirements.txt ho adesso inclusso sci-kit learn.
 
 import pandas as pd
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from src.inference import predict_sentiment
 
 
@@ -24,7 +24,10 @@ def evaluate(csv_path):
     
     report = classification_report(y_true, y_pred)
     acc = accuracy_score(y_true, y_pred)
+    conf_matrix = confusion_matrix(y_true, y_pred)
 
     print(f"Accuracy: {acc:.2f}")
     print("\nDetailed Report:")
     print(report)
+    print("\nConfusion Matrix:")
+    print(conf_matrix)
