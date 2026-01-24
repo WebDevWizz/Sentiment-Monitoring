@@ -8,6 +8,9 @@ Permette di validare facilmente:
 
 Rispetto all'utilizzo diretto da terminale, questo script
 fornisce un test controllato e ripetibile.
+
+Assicurarsi di eliminare il file "sentiment_metrics.csv" prima di eseguire lo script da terminale.
+Oppure, cambiare le frasi in test_sentences, visto che altrimenti verranno prodotte delle metriche duplicate nel file "sentiment_metrics.csv".
 """
 
 from monitoring.monitoring import monitor_batch

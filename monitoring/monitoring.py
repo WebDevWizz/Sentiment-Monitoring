@@ -5,9 +5,11 @@ from datetime import datetime
 from src.inference import predict_sentiment
 
 
-# ⚠️ Dopo il feedback dato dal professore post prima consegna (e dopo varie prove fatte nei giorni scorsi), 
-# ho deciso di scrivere un'unica funzione completa di monitoraggio che non si limita solo a monitorare la confidence, ma che calcoli anche la distribuzione di ogni label 
-# (= % di label positive/neutrali/negative) e soprattutto il Drift (rispetto ad una baseline, giusto per avere un punto di riferimento da cui partire nel monitoraggio; tra l'altro, dopo vari tentativi, ho deciso di impostare la soglia del drift a 0.2)
+"""
+⚠️ Dopo il feedback dato dal professore post prima consegna (e dopo varie prove fatte nei giorni scorsi), 
+ ho deciso di scrivere un'unica funzione completa di monitoraggio che non si limita solo a monitorare la confidence, ma che calcoli anche la distribuzione di ogni label 
+ (= % di label positive/neutrali/negative) e soprattutto il Drift (rispetto ad una baseline, giusto per avere un punto di riferimento da cui partire nel monitoraggio; tra l'altro, dopo vari tentativi, ho deciso di impostare la soglia del drift a 0.2)
+"""
 
 
 def monitor_batch(texts, csv_path, baseline_distribution = None, drift_threshold = 0.2): 
