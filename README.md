@@ -58,16 +58,71 @@ Questo meccanismo simula un reale scenario MLOps, in cui il drift rappresenta un
 
 
 ## Visualizzazione delle Metriche
-Nonostante diversi tentativi e differenti configurazioni dei plugin nel file Docker Compose, Grafana non è riuscito a visualizzare correttamente i dati contenuti nel file CSV tramite il Data Source Infinity.
+Inizialmente è stata progettata una visualizzazione basata su Grafana, utilizzando Docker Compose e il plugin Infinity per la lettura di file CSV.
 
-L’errore restituito è stato costantemente il seguente:
-"error while performing the infinity query. error getting response from url /var/lib/grafana/data/metrics/sentiment_metrics.csv.
-Error: Get "https:///var/lib/grafana/data/metrics/sentiment_metrics.csv": http: no Host in request URL"
+### Docker Compose
 
-Il sistema di monitoraggio, tuttavia, funziona correttamente dal punto di vista applicativo: le metriche vengono prodotte dal modello e salvate in modo persistente nel file CSV.
-Il problema riscontrato sembra essere legato alle limitazioni del plugin Infinity nell’accesso a file locali all’interno di un ambiente containerizzato.
+Il file docker-compose.yml configura un container Grafana con volume persistente:
+```
+services:
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    environment:
+      - GF_INSTALL_PLUGINS=yesoreyeram-infinity-datasource
+    volumes:
+      - grafana-storage:/var/lib/grafana
 
+volumes:
+  grafana-storage: {}
+```
+
+
+### Configurazione Grafana
+Configurazione prevista:
+- Data Source di tipo Infinity
+- Query di tipo CSV
+- URL:
+```
+file:///var/lib/grafana/data/metrics/sentiment_metrics.csv
+```
+
+
+### Limitazione Tecnica
+Nonostante diverse configurazioni e test, Grafana non è riuscito a leggere correttamente il file CSV locale tramite il plugin Infinity.
+
+Errore riscontrato:
+```
+error while performing the infinity query. 
+error getting response from url /var/lib/grafana/data/metrics/sentiment_metrics.csv.
+Error: Get "https:///var/lib/grafana/data/metrics/sentiment_metrics.csv": http: no Host in request URL
+```
+Questa limitazione è legata alle restrizioni del plugin Infinity nell’accesso a file locali all’interno di ambienti containerizzati.
 ---
 
-## Nota sui Test
-Per consentire la corretta esecuzione dei test automatici, è stato necessario inizializzare un file pytest.ini, utilizzato per configurare correttamente il percorso dei moduli Python. In assenza di tale file, l’esecuzione dei test generava errori di import.
+## Soluzione Alternativa di Visualizzazione (Funzionante)
+Per garantire un sistema di monitoraggio realmente operativo e verificabile, è stata implementata una visualizzazione alternativa in Python, basata su pandas e matplotlib.
+
+Il modulo:
+```
+monitoring/visualize.py
+```
+permette di visualizzare direttamente:
+- distribuzione del sentiment
+- andamento delle predizioni
+
+Esempio di utilizzo:
+```
+from monitoring.visualize import plot_sentiment_distribution
+
+visualize_sentiment_distribution("metrics/sentiment_metrics.csv")
+```
+
+Questa soluzione garantisce:
+- visualizzazione reale dei dati
+- riproducibilità
+- indipendenza dall’infrastruttura container
+- funzionamento deterministico
