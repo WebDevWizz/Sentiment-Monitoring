@@ -1,32 +1,63 @@
 # Sistema di Monitoraggio
 Il progetto include un sistema di monitoraggio progettato per osservare in modo continuo il comportamento del modello di sentiment analysis, usando il modello pre-addestrato Twitter RoBERTa. Il dataset è stato invece preso da Kaggle, e salvato nel progetto come "Tweets.csv". 
 
+Il sistema di monitoraggio è stato progettato secondo una logica MLOps-oriented, con separazione tra:
+- fase di inferenza
+- fase di raccolta delle metriche
+- fase di analisi
+- fase di visualizzazione
+
+
 ## Raccolta delle Metriche
-Prima dell’introduzione di Docker Compose, è stato implementato un sistema di raccolta delle metriche basato su file CSV.
-In particolare, il file sentiment_metrics.csv (presente nella cartella metrics/) viene utilizzato per salvare:
-- un timestamp, necessario per una successiva visualizzazione temporale in Grafana;
-- il sentiment predetto dal modello.
+È stato implementato un sistema di logging basato su file CSV, utilizzato come storage persistente delle metriche di monitoraggio. Il file ```sentiment_metrics.csv``` (presente nella cartella metrics/) contiene per ogni predizione:
+- timestamp → istante temporale della predizione (UTC, formato ISO)
+- sentiment → label predetta dal modello (positive, neutral, negative)
+- confidence → probabilità associata alla predizione (softmax score)
 
-
-È stata definita una funzione di monitoraggio **monitor_text**, che esegue l’inferenza sul testo in ingresso e salva automaticamente il risultato nel file CSV. La funzione è stata testata manualmente da terminale, verificando che le predizioni vengano correttamente registrate nel file.
-
----
-
-## Docker Compose
-Per quanto riguarda l’infrastruttura di monitoraggio, è stato utilizzato **Docker Compose** per configurare ***Grafana*** come piattaforma di visualizzazione.
-Il file ***docker-compose.yml*** prevede un singolo container Grafana e un volume condiviso, in modo da rendere persistente e accessibile il file CSV contenente le metriche di monitoraggio.
-
-
-### Configurazione di Grafana
-Seguendo la procedura mostrata dal professore durante le lezioni, Grafana è stato configurato nel seguente modo:
-- creazione di un Data Source di tipo “Infinity”, utilizzato per la gestione di file CSV;
-- creazione di una nuova dashboard, impostando il tipo di query su CSV e specificando come URL il percorso:
-***var/lib/grafana/data/metrics/sentiment_metrics.csv***
+La raccolta delle metriche è gestita dalla funzione:
+``` monitor_batch(...) ```
+che esegue le seguenti operazioni:
+- inferenza batch sui testi in input
+- logging automatico delle predizioni nel CSV
+- calcolo della distribuzione delle classi (positive/neutral/negative)
+- calcolo della confidence media
+- rilevamento del drift rispetto a una baseline opzionale
 
 ---
 
+## Distribuzione e Drit Detection
+Il sistema di monitoraggio non si limita al semplice logging, ma implementa anche:
 
-## Nota su una Limitazione Tecnica
+### 📊 Distribuzione delle label
+Calcolo percentuale delle classi predette nel batch:
+- positive
+- neutral
+- negative
+
+### 📈 Confidence media
+Calcolo della probabilità media delle predizioni come indicatore di affidabilità del modello.
+
+### Drift Detection
+Il drift viene rilevato confrontando la distribuzione corrente con una baseline di riferimento:
+```
+baseline_distribution = {
+    "positive": ...,
+    "neutral": ...,
+    "negative": ...
+}
+```
+
+Se la differenza assoluta tra distribuzione corrente e baseline supera una soglia (drift_threshold = 0.2), il sistema segnala drift:
+```
+Drift detected: YES
+```
+
+Questo meccanismo simula un reale scenario MLOps, in cui il drift rappresenta un segnale per un possibile retraining del modello.
+
+---
+
+
+## Visualizzazione delle Metriche
 Nonostante diversi tentativi e differenti configurazioni dei plugin nel file Docker Compose, Grafana non è riuscito a visualizzare correttamente i dati contenuti nel file CSV tramite il Data Source Infinity.
 
 L’errore restituito è stato costantemente il seguente:
